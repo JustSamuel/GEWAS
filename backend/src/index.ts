@@ -27,15 +27,6 @@ var options = {
     }
 } as AxiosRequestConfig;
 
-const headers = {
-    method: 'GET',
-    url: 'mail.gewis.nl/api/v1/get/alias/all',
-    headers: {
-        'Content-Type': 'application/json',
-        'X-API-Key': process.env.API_KEY,
-    }
-}
-
 export const init = async () => {
 
     const server: Server = new Server({
@@ -43,21 +34,12 @@ export const init = async () => {
         host: '0.0.0.0'
     });
 
+    initAliasDictionary()
+
     server.route({
         method: 'GET',
         path: '/',
         handler: async (request: Request, h: ResponseToolkit) => {
-            const array = [];
-            await axios(options)
-                .then((res: AxiosResponse<alias[]>) => {
-                    res.data.forEach((alias: alias) => {
-                        if (alias.address.includes("@gewis.nl")) array.push(alias.address)
-                    });
-                    console.log(array)
-                })
-                .catch(err => {
-                    console.log(err);
-                });
             return "yooo"
         }
     });
@@ -65,6 +47,47 @@ export const init = async () => {
     await server.start();
     console.log('Server running on %s', server.info.uri);
 };
+
+const alias_dict: {[key: string]: { aliases:string[]} } = {}
+
+function resolveAlias(alias: string){
+    const result = {to: alias, from: null as null|any[]}
+    if (Object.prototype.hasOwnProperty.call(alias_dict, alias)) {
+        // Alias is an alias.
+        alias_dict[alias].aliases.forEach((al) => {
+            if (result.from === null) {
+                result.from = [resolveAlias(al)]
+            } else {
+                result.from.push(resolveAlias(al));
+            }
+        })
+    }
+    return result
+}
+
+function getAliasUser(alias: string){
+    console.log(JSON.stringify(resolveAlias(alias), undefined, 2) )
+}
+
+async function initAliasDictionary() {
+    await axios(options)
+        .then((res: AxiosResponse<alias[]>) => {
+            res.data.forEach((alias: alias) => {
+                alias.goto.split(',').forEach((goto) => {
+                    if (alias.active === 1) {
+                        if (Object.prototype.hasOwnProperty.call(alias_dict, goto)) {
+                            alias_dict[goto].aliases.push(alias.address)
+                        } else {
+                            alias_dict[goto] = { aliases: [alias.address]}
+                        }
+                    }
+                })
+            });
+        })
+        .catch(err => {
+            console.log(err);
+        });
+}
 
 process.on('unhandledRejection', (err) => {
     console.log(err);
