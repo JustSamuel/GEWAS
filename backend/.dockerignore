@@ -2,6 +2,7 @@
 
 !main.ts
 !src/
+!node_modules/
 !webpack.config.ts
 !package.json
 !package-lock.json
