@@ -23,10 +23,10 @@
     "devDependencies": {
         "@hapi/hapi": "^20.1.2",
         "@types/webpack": "^4.41.27",
+        "cross-env": "^7.0.3",
         "nodemon": "^2.0.7",
         "ts-loader": "^6.2.2",
         "ts-node": "^9.1.1",
-        "cross-env": "^7.0.3",
         "typescript": "^3.7.5",
         "webpack": "^4.41.5",
         "webpack-cli": "^3.3.10",
