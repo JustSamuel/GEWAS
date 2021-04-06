@@ -33,6 +33,6 @@
         "webpack-node-externals": "^1.7.2"
     },
     "engines": {
-        "node": ">= 12"
+        "node": ">= 13"
     }
 }
