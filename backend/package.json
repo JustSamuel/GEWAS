@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "build": "cross-env NODE_ENV=production webpack",
-        "dev": "API_KEY=5C14DE-CDDB33-CCE29E-F4F53A-926132 nodemon"
+        "dev": "env-cmd nodemon"
     },
     "repository": {
         "type": "git",
@@ -24,6 +24,7 @@
     "devDependencies": {
         "@types/webpack": "^4.41.27",
         "cross-env": "^7.0.3",
+        "env-cmd": "^10.1.0",
         "nodemon": "^2.0.7",
         "ts-loader": "^6.2.2",
         "ts-node": "^9.1.1",
