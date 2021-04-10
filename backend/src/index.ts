@@ -30,17 +30,22 @@ var options = {
 export const init = async () => {
 
     const server: Server = new Server({
-        port: 3001,
-        host: '0.0.0.0'
+        port: 9404,
+        host: '0.0.0.0',
+        routes: {
+            cors: {
+                origin: ['*']
+            }
+        }
     });
 
     initAliasDictionary()
 
     server.route({
         method: 'GET',
-        path: '/',
+        path: '/api/email/{email}/aliases',
         handler: async (request: Request, h: ResponseToolkit) => {
-            return "yooo"
+            return getAliasUser(request.params.email);
         }
     });
 
@@ -66,7 +71,7 @@ function resolveAlias(alias: string){
 }
 
 function getAliasUser(alias: string){
-    console.log(JSON.stringify(resolveAlias(alias), undefined, 2) )
+    return resolveAlias(alias)
 }
 
 async function initAliasDictionary() {

@@ -6,4 +6,4 @@ services:
         environment:
             - API_KEY=SECRET
         ports:
-            - 0.0.0.0:3001:3001/tcp
+            - 0.0.0.0:9404:9404/tcp

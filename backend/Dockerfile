@@ -47,7 +47,7 @@ RUN npm install --only=production
 COPY --from=builder /app/dist .
 
 # Expose the relevant port.
-EXPOSE 3001
+EXPOSE 9404
 
 # Run the app.
 CMD ["node", "app.js"]

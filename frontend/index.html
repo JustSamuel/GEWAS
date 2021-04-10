@@ -3,8 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <title>Alias lookup</title>
+    <link rel="stylesheet" type="text/css" href="main.css"/>
+    <script src="index.js"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@700&display=swap" rel="stylesheet">
 </head>
-<body>
-<h1>test</h1>
-</body>
+    <body>
+        <div class="content">
+            <div class="fly_in_animation">
+                <h1>Alias lookup</h1>
+                <form onsubmit="return lookup(this.elements['emailInput'].value)">
+                    <label>
+                        <input id="emailInput" class="custom_input" type="text" required>
+                    </label>
+                </form>
+                <div id="result" class="fly_in_animation">
+                </div>
+            </div>
+        </div>
+    </body>
 </html>
