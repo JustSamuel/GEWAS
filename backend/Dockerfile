@@ -30,8 +30,8 @@ FROM node:13-alpine
 # Set env to production.
 ENV NODE_ENV=production
 
-# Go to the /app folder
-WORKDIR /app
+# Set WORKDIR to /usr/src/app
+WORKDIR /usr/src/app
 
 # User permissions.
 RUN chown node:node .
@@ -49,5 +49,4 @@ COPY --from=builder /app/dist .
 # Expose the relevant port.
 EXPOSE 9404
 
-# Run the app.
 CMD ["node", "app.js"]

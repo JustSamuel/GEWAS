@@ -1,5 +1,6 @@
-import { Server, Request, ResponseToolkit } from "@hapi/hapi";
+import {Server, Request, ResponseToolkit} from "@hapi/hapi";
 import axios, {AxiosRequestConfig, AxiosResponse} from 'axios';
+import env from "./envvars"
 
 type alias = {
     in_primary_domain: string
@@ -19,11 +20,9 @@ type alias = {
 };
 
 var options = {
-    method: 'GET',
-    url: 'https://mail.gewis.nl/api/v1/get/alias/all',
     headers: {
         'Content-Type': 'application/json',
-        'X-API-Key': process.env.API_KEY,
+        'X-API-Key': env.API_KEY,
     }
 } as AxiosRequestConfig;
 
@@ -39,8 +38,6 @@ export const init = async () => {
         }
     });
 
-    console.log(process.env.NODE_ENV);
-    console.log(process.env.API_KEY);
     initAliasDictionary();
 
     server.route({
@@ -55,10 +52,10 @@ export const init = async () => {
     console.log('Server running on %s', server.info.uri);
 };
 
-const alias_dict: {[key: string]: { aliases:string[]} } = {}
+const alias_dict: { [key: string]: { aliases: string[] } } = {}
 
-function resolveAlias(alias: string){
-    const result = {to: alias, from: null as null|any[]}
+function resolveAlias(alias: string) {
+    const result = {to: alias, from: null as null | any[]}
     if (Object.prototype.hasOwnProperty.call(alias_dict, alias)) {
         // Alias is an alias.
         alias_dict[alias].aliases.forEach((al) => {
@@ -72,12 +69,15 @@ function resolveAlias(alias: string){
     return result
 }
 
-function getAliasUser(alias: string){
+function getAliasUser(alias: string) {
     return resolveAlias(alias)
 }
 
 async function initAliasDictionary() {
-    await axios(options)
+    await axios({
+        method: 'GET',
+        url: 'https://mail.gewis.nl/api/v1/get/alias/all', ...options
+    })
         .then((res: AxiosResponse<alias[]>) => {
             res.data.forEach((alias: alias) => {
                 alias.goto.split(',').forEach((goto) => {
@@ -85,7 +85,7 @@ async function initAliasDictionary() {
                         if (Object.prototype.hasOwnProperty.call(alias_dict, goto)) {
                             alias_dict[goto].aliases.push(alias.address)
                         } else {
-                            alias_dict[goto] = { aliases: [alias.address]}
+                            alias_dict[goto] = {aliases: [alias.address]}
                         }
                     }
                 })
@@ -94,6 +94,37 @@ async function initAliasDictionary() {
         .catch(err => {
             console.log(err);
         });
+    await axios({
+        method: 'GET',
+        url: 'https://mail.gewis.nl/api/v1/get/mailbox/all', ...options
+    }).then((users: AxiosResponse<any[]>) => {
+        users.data.forEach((user: any) => {
+            axios({
+                method: 'GET',
+                url: 'https://mail.gewis.nl/api/v1/get/active-user-sieve/' + user.username, ...options
+            }).then((forwards: AxiosResponse<any[]>) => {
+                getForwards(forwards.data).forEach((alias) => {
+                    if (Object.prototype.hasOwnProperty.call(alias_dict, alias)) {
+                        alias_dict[alias].aliases.push(user.username)
+                    } else {
+                        alias_dict[alias] = {aliases: [user.username]}
+                    }
+                })
+            })
+        })
+    })
+    console.log("done")
+}
+
+const regex = /^(?:redirect ")([^\"]*)";/gm;
+
+function getForwards(data) {
+    let m;
+    const forwards = [];
+    while ((m = regex.exec(data)) !== null) {
+        forwards.push(m[1])
+    }
+    return forwards
 }
 
 process.on('unhandledRejection', (err) => {

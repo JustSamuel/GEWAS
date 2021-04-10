@@ -25,11 +25,6 @@ const config: webpack.Configuration = {
         ],
     },
 
-    plugins: [new DefinePlugin({
-        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-        'process.env.API_KEY': JSON.stringify(process.env.API_KEY),
-    })],
-
     // Ignore node externals when compiling.
     externals: [nodeExternals()],
 
@@ -38,13 +33,14 @@ const config: webpack.Configuration = {
         extensions: ['.tsx', '.ts', '.js'],
     },
 
+    // Inject env.
+    node: {process: false},
+
     // Output everything in a app.js file under dist.
     output: {
         filename: 'app.js',
         path: path.resolve(__dirname, 'dist'),
     },
 };
-
-console.warn(process.env)
 
 export default config;

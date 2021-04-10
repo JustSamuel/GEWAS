@@ -4,7 +4,7 @@
     "description": "Backend of the Alias lookup tool.",
     "main": "index.js",
     "scripts": {
-        "build": "cross-env NODE_ENV=production webpack",
+        "build": "NODE_ENV=production webpack",
         "dev": "env-cmd nodemon"
     },
     "repository": {
