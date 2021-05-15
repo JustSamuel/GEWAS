@@ -2,7 +2,7 @@ version: '3.6'
 
 services:
     base:
-        image:  alias_site_backend:v0.0.2
+        image:  cbc.docker-registry.gewis.nl/alias_site_backend:latest
         environment:
             - API_KEY=SECRET
         ports:

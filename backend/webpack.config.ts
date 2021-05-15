@@ -33,7 +33,7 @@ const config: webpack.Configuration = {
         extensions: ['.tsx', '.ts', '.js'],
     },
 
-    // Inject env.
+    // Prevent process.env overwriting.
     node: {process: false},
 
     // Output everything in a app.js file under dist.

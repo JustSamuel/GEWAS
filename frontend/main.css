@@ -28,11 +28,11 @@ h1 {
 
 .content {
     zoom: 1.75;
-    position: absolute;
-    margin-top: 40px;
-    margin-bottom: 40px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
     box-sizing: border-box;
-    left: 40%;
+    margin: auto;
 }
 
 input {
