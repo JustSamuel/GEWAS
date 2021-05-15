@@ -4,7 +4,7 @@ FROM node:13-alpine as builder
 
 WORKDIR /usr/src/app
 # Copy over our package and package-lock.
-COPY package*.json .
+COPY package*.json ./
 
 # Install our package
 RUN npm i
@@ -33,13 +33,13 @@ ENV NODE_ENV=production
 WORKDIR /usr/src/app
 
 # Copy over our package and packagelock.
-COPY package*.json .
+COPY package*.json ./
 
 # Install only the production packages.
 RUN npm install --only=production
 
 # Copy over our webpack compiled app from the builder container.
-COPY --from=builder /usr/src/app/dist ./src
+COPY --from=builder /usr/src/app/dist /usr/src/app/
 
 # User permissions.
 RUN chown -R node:node .

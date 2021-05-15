@@ -5,6 +5,7 @@
     "main": "index.js",
     "scripts": {
         "build": "cross-env NODE_ENV=production webpack",
+        "run": "env-cmd node dist/app.js",
         "dev": "env-cmd nodemon"
     },
     "repository": {
@@ -18,7 +19,8 @@
     },
     "homepage": "https://github.com/JustSamuel/GEWAS#readme",
     "dependencies": {
-        "@hapi/hapi": "^20.1.2"
+        "@hapi/hapi": "^20.1.2",
+        "ts-mailcow-api": "^0.5.2"
     },
     "devDependencies": {
         "@types/webpack": "^4.41.27",
@@ -26,7 +28,6 @@
         "env-cmd": "^10.1.0",
         "nodemon": "^2.0.7",
         "ts-loader": "^6.2.2",
-        "ts-mailcow-api": "^0.5.1",
         "ts-node": "^9.1.1",
         "typescript": "^3.7.5",
         "webpack": "^4.41.5",
