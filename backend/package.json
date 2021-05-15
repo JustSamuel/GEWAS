@@ -1,7 +1,7 @@
 {
     "name": "email-api-backend",
     "version": "1.0.0",
-    "description": "Backend of the email-api project for GEWIS.",
+    "description": "Gewis E-mail Website API Software (GEWAS).",
     "main": "index.js",
     "scripts": {
         "build": "cross-env NODE_ENV=production webpack",
@@ -9,14 +9,14 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/JustSamuel/email-api.git"
+        "url": "git+https://github.com/JustSamuel/GEWAS.git"
     },
     "author": "Samuel",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/JustSamuel/email-api/issues"
+        "url": "https://github.com/JustSamuel/GEWAS/issues"
     },
-    "homepage": "https://github.com/JustSamuel/email-api#readme",
+    "homepage": "https://github.com/JustSamuel/GEWAS#readme",
     "dependencies": {
         "@hapi/hapi": "^20.1.2"
     },
