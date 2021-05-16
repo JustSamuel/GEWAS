@@ -54,13 +54,21 @@ input {
 
     padding: var(--box-padding);
     height: var(--box-height);
-    width: var(--box-width);
+    min-width: var(--box-width);
 
     background-color: white;
     border-radius: 4px;
     box-sizing: border-box;
     display: inline-block;
     position: relative;
+}
+
+#result span.alias {
+    background-color: #C4000010;
+}
+
+#result span.forward {
+    background-color: #29306510;
 }
 
 #result > div:first-child {
@@ -89,6 +97,8 @@ input {
     width: var(--connector-width);
     height: 4px;
 }
+
+
 
 .life-line:before {
     display: inline-block;

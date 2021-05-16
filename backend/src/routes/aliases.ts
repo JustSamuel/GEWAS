@@ -8,10 +8,12 @@ import {mcc} from "../index";
  *         'email': ['alias1', 'alias2', 'forward1']
  *     }
  */
+type AliasType = "alias" | "forward" | null
+type AliasEntry = {from: string, type: AliasType}
 type AliasDictionary = {
     emails: {
         [key:string] : {
-            aliases: string[]
+            aliases: AliasEntry[]
         },
     }
     last_update_time: Date
@@ -23,7 +25,7 @@ const alias_dict: AliasDictionary = { emails: {}, last_update_time: new Date() }
  * @param email - The target email.
  * @param alias - The alias for the target email.
  */
-function addAlias(email: string, alias: string) {
+function addAlias(email: string, alias: AliasEntry) {
     // Check if email is known.
     if (Object.prototype.hasOwnProperty.call(alias_dict.emails, email)) {
         alias_dict.emails[email].aliases.push(alias)
@@ -47,7 +49,7 @@ export async function createAliasDictionary() {
             alias.goto.split(',').forEach((goto) => {
                 // Only consider active aliases.
                 if (alias.active) {
-                    addAlias(goto, alias.address)
+                    addAlias(goto, {from: alias.address, type: "alias"})
                 }
             })
         })
@@ -64,7 +66,7 @@ export async function createAliasDictionary() {
                 // Extract the forwards out of the sieve.
                 getForwards(sieve).forEach((forward) => {
                     // If 'mailbox' forwards to 'adress' than 'mailbox' is an alias of 'adress'.
-                    addAlias(forward, mailbox.username)
+                    addAlias(forward, {from: mailbox.username, type: "forward"})
                 })
             })
         })
@@ -106,17 +108,19 @@ function getForwards(sieve: string[]) {
 
 // An Alias has a 'to' and 'from' field. However the 'from' field can be another Alias.
 type Alias = {
-    to: string
-    from: null | Alias[]
+    to: string,
+    from: null | Alias[],
+    type: AliasType,
 }
 
 /**
  * Function that takes an email adress and returns it corresponding Alias typing.
  * @param email - The goto adress of the alias.
+ * @param type
  */
-function resolveAlias(email: string): Alias {
+function resolveAlias(email: string, type: AliasType): Alias {
     // Resulting Alias object.
-    const result: Alias = {to: email, from: null}
+    const result: Alias = {to: email, from: null, type: type}
 
     // Check if the email can be found in the alias dictionary..
     if (Object.prototype.hasOwnProperty.call(alias_dict.emails, email)) {
@@ -124,9 +128,9 @@ function resolveAlias(email: string): Alias {
         alias_dict.emails[email].aliases.forEach((al) => {
             // Recurse on the alias.
             if (result.from === null) {
-                result.from = [resolveAlias(al)]
+                result.from = [resolveAlias(al.from, al.type)]
             } else {
-                result.from.push(resolveAlias(al));
+                result.from.push(resolveAlias(al.from, al.type));
             }
         })
     }
@@ -136,7 +140,7 @@ function resolveAlias(email: string): Alias {
 // Routing function.
 export function getAliasUser(email: string) {
     const age = Date.now() - alias_dict.last_update_time.getTime();
-    const result = resolveAlias(email);
+    const result = resolveAlias(email, null);
     // If the dictionary is 1 hour old, we update it.
     if ((age / 3600000) > 1) {
         createAliasDictionary().then(() => console.log("Updated alias dictionary"));

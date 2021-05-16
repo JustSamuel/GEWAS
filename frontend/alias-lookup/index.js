@@ -59,6 +59,8 @@ function parseResult (result) {
     return
   }
 
+  JSONResult.from.sort((a, b) => a.to > b.to && 1 || -1)
+
   // We add the lifeline to the result div.
   resultDiv.classList.add('life-line')
 
@@ -87,6 +89,7 @@ function parseAlias (parent, alias) {
 
   // Add a label with the correct text to the div.
   const label = document.createElement('span')
+  label.classList.add(alias.type)
   label.innerHTML = alias.to
   newDiv.appendChild(label)
 
@@ -95,6 +98,7 @@ function parseAlias (parent, alias) {
 
   // Alias is recursive..
   if (alias.from !== null) {
+    alias.from.sort((a, b) => a.to > b.to && 1 || -1)
     // ..recurse on the aliases.
     alias.from.forEach((fromAlias) => {
       childrenCount += 1
