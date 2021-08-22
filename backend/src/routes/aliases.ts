@@ -55,7 +55,7 @@ export async function createAliasDictionary() {
         })
     }).catch(err => {
         console.log(err)
-    })
+    });
 
     // Get all mailboxes.
     await mcc.mailbox.get().then((mailboxes) => {
@@ -72,9 +72,9 @@ export async function createAliasDictionary() {
         })
     }).catch(err => {
         console.log(err)
-    })
+    });
 
-    alias_dict.last_update_time = new Date()
+    alias_dict.last_update_time = new Date();
     console.log("Alias Dictionary Initialised.")
 }
 
