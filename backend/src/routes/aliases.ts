@@ -1,7 +1,7 @@
 import {mcc} from "../index";
 
 /**
- * The alias_dict is a object that maps every email to all its aliases and or forwards.
+ * The alias_dict is an object that maps every email to all its aliases and or forwards.
  * <p>
  *     This is done in the form of:
  *     {
@@ -42,7 +42,14 @@ function addAlias(email: string, alias: AliasEntry) {
 export async function createAliasDictionary() {
     alias_dict.emails = {}
     // Get all aliases.
-    await mcc.alias.get().then((aliases) => {
+    await mcc.aliases.get().then((res) => {
+        // Force response to array.
+        let aliases
+        if (Array.isArray(res)) {
+            aliases = res
+        } else {
+            aliases = [res]
+        }
         // For each alias we have...
         aliases.forEach((alias) => {
             // ...loop over the GOTOs.
@@ -62,7 +69,7 @@ export async function createAliasDictionary() {
         // For each mailbox...
         mailboxes.forEach(async (mailbox) => {
             // ...get the sieve filter.
-           await mcc.mailbox.getUserSieve(mailbox.username).then((sieve) => {
+           await mcc.mailbox.getActiveUserSieve(mailbox.username).then((sieve) => {
                 // Extract the forwards out of the sieve.
                 getForwards(sieve).forEach((forward) => {
                     // If 'mailbox' forwards to 'adress' than 'mailbox' is an alias of 'adress'.
@@ -114,8 +121,8 @@ type Alias = {
 }
 
 /**
- * Function that takes an email adress and returns it corresponding Alias typing.
- * @param email - The goto adress of the alias.
+ * Function that takes an email address and returns it corresponding Alias typing.
+ * @param email - The goto address of the alias.
  * @param type
  */
 function resolveAlias(email: string, type: AliasType): Alias {

@@ -26,6 +26,7 @@ const config: webpack.Configuration = {
     },
 
     // Ignore node externals when compiling.
+    externalsPresets: { node: true },
     externals: [nodeExternals()],
 
     // Syntactic sugar
@@ -33,10 +34,7 @@ const config: webpack.Configuration = {
         extensions: ['.tsx', '.ts', '.js'],
     },
 
-    // Prevent process.env overwriting.
-    node: {process: false},
-
-    // Output everything in a app.js file under dist.
+    // Output everything in an app.js file under dist.
     output: {
         filename: 'app.js',
         path: path.resolve(__dirname, 'dist'),
