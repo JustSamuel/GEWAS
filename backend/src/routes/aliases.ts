@@ -65,7 +65,7 @@ export async function createAliasDictionary() {
     })
 
     // Get all mailboxes.
-    await mcc.mailbox.get().then((mailboxes) => {
+    await mcc.mailbox.get('all').then((mailboxes) => {
         // For each mailbox...
         mailboxes.forEach(async (mailbox) => {
             // ...get the sieve filter.
