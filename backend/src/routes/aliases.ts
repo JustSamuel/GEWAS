@@ -40,6 +40,10 @@ function addAlias(email: string, alias: AliasEntry) {
  * and then it uses the user sieves to get all the forwards.
  */
 export async function createAliasDictionary() {
+    console.log("Creating Alias Dictionary.");
+    // Keep this at the top to prevent race conditions.
+    alias_dict.last_update_time = new Date()
+
     alias_dict.emails = {}
     // Get all aliases.
     await mcc.aliases.get().then((res) => {
@@ -81,7 +85,6 @@ export async function createAliasDictionary() {
         console.log(err)
     })
 
-    alias_dict.last_update_time = new Date()
     console.log("Alias Dictionary Initialised.")
 }
 
@@ -144,8 +147,10 @@ function resolveAlias(email: string, type: AliasType): Alias {
     return result
 }
 
+
 // Routing function.
 export function getAliasUser(email: string) {
+    console.log(`Getting alias for ${email}`);
     const age = Date.now() - alias_dict.last_update_time.getTime();
     const result = resolveAlias(email, null);
     // If the dictionary is 1 hour old, we update it.
