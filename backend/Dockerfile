@@ -1,6 +1,6 @@
 # We build our container using node:13-alpine
 # We do this so that we can first use webpack and then create a new container using that.
-FROM node:13-alpine as builder
+FROM node:20-alpine as builder
 
 WORKDIR /usr/src/app
 # Copy over our package and package-lock.
@@ -25,7 +25,7 @@ RUN npm run build
 
 
 # We now create the production container, using node:13-alpine.
-FROM node:13-alpine
+FROM node:20-alpine
 # Set env to production.
 ENV NODE_ENV=production
 
