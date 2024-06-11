@@ -46,7 +46,7 @@ export async function createAliasDictionary() {
 
     alias_dict.emails = {}
     // Get all aliases.
-    await mcc.aliases.get().then((res) => {
+    await mcc.aliases.get("all").then((res) => {
         // Force response to array.
         let aliases
         if (Array.isArray(res)) {

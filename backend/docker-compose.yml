@@ -5,6 +5,6 @@ services:
         image:  cbc.docker-registry.gewis.nl/alias_site_backend:latest
         environment:
             - API_KEY=SECRET
-            - BASE_URL=https://mail.gewis.nl/api/v1/
+            - BASE_URL=https://mail.gewis.nl/
         ports:
             - 0.0.0.0:9404:9404/tcp
