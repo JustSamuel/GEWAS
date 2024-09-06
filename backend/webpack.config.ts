@@ -1,31 +1,29 @@
-// @ts-ignore
 import path from 'path';
-// @ts-ignore
-import webpack, {DefinePlugin} from 'webpack';
-import nodeExternals from 'webpack-node-externals'
+import webpack, { DefinePlugin } from 'webpack';
+import nodeExternals from 'webpack-node-externals';
 
 /**
- * Basic Webpack configuration.
+ * Basic Webpack configuration for Webpack 5.
  */
 const config: webpack.Configuration = {
-    // We only use webpack in production mode.
-    mode: "production",
+    // Production mode
+    mode: 'production',
 
-    // Main build entry point.
+    // Entry point
     entry: './main.ts',
 
-    // Typescript loader for webpack.
+    // Module rules for TypeScript
     module: {
         rules: [
             {
-                test: /\.tsx?$/,         // Target al .ts files
-                use: 'ts-loader',        // Use the ts-loader
-                exclude: /node_modules/, // Ignore the node_modules
+                test: /\.tsx?$/,           // Target all .ts and .tsx files
+                use: 'ts-loader',          // Use ts-loader
+                exclude: /node_modules/,   // Exclude node_modules
             },
         ],
     },
 
-    // Ignore node externals when compiling.
+    // Ignore node externals when compiling for node
     externals: [nodeExternals()],
 
     // Syntactic sugar
@@ -33,14 +31,27 @@ const config: webpack.Configuration = {
         extensions: ['.tsx', '.ts', '.js'],
     },
 
-    // Prevent process.env overwriting.
-    node: {process: false},
-
-    // Output everything in a app.js file under dist.
+    // Output configuration
     output: {
-        filename: 'app.js',
-        path: path.resolve(__dirname, 'dist'),
+        filename: 'app.js',                   // Output file name
+        path: path.resolve(__dirname, 'dist'), // Output path
+        clean: true,                          // Clean the output directory (Webpack 5 feature)
     },
+
+    // Optimization
+    optimization: {
+        minimize: true,                       // Minify output by default in production mode
+    },
+
+    // Target Node.js (optional depending on your use case)
+    target: 'node',
+
+    // Define plugin for environment variables if needed
+    plugins: [
+        new DefinePlugin({
+            'process.env.NODE_ENV': JSON.stringify('production'),
+        }),
+    ],
 };
 
 export default config;

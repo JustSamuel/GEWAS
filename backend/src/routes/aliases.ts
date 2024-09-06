@@ -42,7 +42,7 @@ function addAlias(email: string, alias: AliasEntry) {
 export async function createAliasDictionary() {
     alias_dict.emails = {}
     // Get all aliases.
-    await mcc.alias.get().then((aliases) => {
+    await mcc.aliases.get().then((aliases) => {
         // For each alias we have...
         aliases.forEach((alias) => {
             // ...loop over the GOTOs.
@@ -58,11 +58,11 @@ export async function createAliasDictionary() {
     })
 
     // Get all mailboxes.
-    await mcc.mailbox.get().then((mailboxes) => {
+    await mcc.mailbox.get("all").then((mailboxes) => {
         // For each mailbox...
         mailboxes.forEach(async (mailbox) => {
             // ...get the sieve filter.
-           await mcc.mailbox.getUserSieve(mailbox.username).then((sieve) => {
+           await mcc.mailbox.getActiveUserSieve(mailbox.username).then((sieve) => {
                 // Extract the forwards out of the sieve.
                 getForwards(sieve).forEach((forward) => {
                     // If 'mailbox' forwards to 'adress' than 'mailbox' is an alias of 'adress'.
