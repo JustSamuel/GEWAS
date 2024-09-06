@@ -1,7 +1,7 @@
 import {mcc} from "../index";
 
 /**
- * The alias_dict is a object that maps every email to all its aliases and or forwards.
+ * The alias_dict is an object that maps every email to all its aliases and or forwards.
  * <p>
  *     This is done in the form of:
  *     {
@@ -40,9 +40,20 @@ function addAlias(email: string, alias: AliasEntry) {
  * and then it uses the user sieves to get all the forwards.
  */
 export async function createAliasDictionary() {
+    console.log("Creating Alias Dictionary.");
+    // Keep this at the top to prevent race conditions.
+    alias_dict.last_update_time = new Date()
+
     alias_dict.emails = {}
     // Get all aliases.
-    await mcc.aliases.get().then((aliases) => {
+    await mcc.aliases.get("all").then((res) => {
+        // Force response to array.
+        let aliases
+        if (Array.isArray(res)) {
+            aliases = res
+        } else {
+            aliases = [res]
+        }
         // For each alias we have...
         aliases.forEach((alias) => {
             // ...loop over the GOTOs.
@@ -58,7 +69,7 @@ export async function createAliasDictionary() {
     })
 
     // Get all mailboxes.
-    await mcc.mailbox.get("all").then((mailboxes) => {
+    await mcc.mailbox.get('all').then((mailboxes) => {
         // For each mailbox...
         mailboxes.forEach(async (mailbox) => {
             // ...get the sieve filter.
@@ -74,7 +85,6 @@ export async function createAliasDictionary() {
         console.log(err)
     })
 
-    alias_dict.last_update_time = new Date()
     console.log("Alias Dictionary Initialised.")
 }
 
@@ -114,8 +124,8 @@ type Alias = {
 }
 
 /**
- * Function that takes an email adress and returns it corresponding Alias typing.
- * @param email - The goto adress of the alias.
+ * Function that takes an email address and returns it corresponding Alias typing.
+ * @param email - The goto address of the alias.
  * @param type
  */
 function resolveAlias(email: string, type: AliasType): Alias {
@@ -139,6 +149,7 @@ function resolveAlias(email: string, type: AliasType): Alias {
 
 // Routing function.
 export function getAliasUser(email: string) {
+    console.log(`Getting alias for ${email}`);
     const age = Date.now() - alias_dict.last_update_time.getTime();
     const result = resolveAlias(email, null);
     // If the dictionary is 1 hour old, we update it.
