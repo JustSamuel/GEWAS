@@ -85,7 +85,8 @@ export async function createAliasDictionary() {
       }
     }
   } catch (err) {
-    console.error(err);
+    // @ts-expect-error log mailcow error
+    console.error(err.message);
   }
 
   console.info('Alias Dictionary Initialised.');
