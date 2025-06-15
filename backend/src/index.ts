@@ -1,35 +1,48 @@
-import {Server, Request, ResponseToolkit} from "@hapi/hapi";
-import env from "./env";
+import { Server, Request } from '@hapi/hapi';
 import MailCowClient from 'ts-mailcow-api';
-import {createAliasDictionary, getAliasUser} from "./routes/aliases";
+import Joi from 'joi';
+import env from './env';
+import { createAliasDictionary, getAliasUser } from './routes/aliases';
 
-export const mcc: MailCowClient = new MailCowClient(env.BASE_URL, env.API_KEY)
+export const mcc: MailCowClient = new MailCowClient(env.BASE_URL, env.API_KEY);
 
 export const init = async () => {
-    const server: Server = new Server({
-        port: 9404,
-        host: '0.0.0.0',
-        routes: {
-            cors: {
-                origin: ['*']
-            }
-        }
-    });
+  const server: Server = new Server({
+    port: 9404,
+    host: '0.0.0.0',
+    routes: {
+      cors: {
+        origin: ['*'],
+      },
+    },
+  });
 
-    server.route({
-        method: 'GET',
-        path: '/api/email/{email}/aliases',
-        handler: async (request: Request, h: ResponseToolkit) => {
-            return getAliasUser(request.params.email);
-        }
-    });
+  server.route({
+    method: 'GET',
+    path: '/api/email/{email}/aliases',
+    options: {
+      validate: {
+        params: Joi.object({
+          email: Joi.string().email().required(),
+        }),
+        failAction: (_request, _h, err) => {
+          // Throw validation error as a Boom 400
+          throw err;
+        },
+      },
+    },
+    handler: (request: Request) => {
+      const { email } = request.params as { email: string };
+      return getAliasUser(email);
+    },
+  });
 
-    await server.start();
-    await createAliasDictionary();
-    console.log('Server running on %s', server.info.uri);
+  await server.start();
+  await createAliasDictionary();
+  console.info('Server running on %s', server.info.uri);
 };
 
 process.on('unhandledRejection', (err) => {
-    console.log(err);
-    process.exit(1);
+  console.error(err);
+  process.exit(1);
 });

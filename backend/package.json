@@ -4,6 +4,10 @@
     "description": "Gewis E-mail Website API Software (GEWAS).",
     "main": "index.js",
     "scripts": {
+        "lint": "eslint src",
+        "lint:fix": "eslint src --fix",
+        "format": "prettier --ignore-path .gitignore --check ./src/",
+        "format:fix": "prettier --ignore-path .gitignore --write ./src/",
         "build": "cross-env NODE_ENV=production webpack",
         "run": "env-cmd node dist/app.js",
         "dev": "env-cmd nodemon"
@@ -23,10 +27,15 @@
         "ts-mailcow-api": "^1.0.0"
     },
     "devDependencies": {
+        "@gewis/eslint-config-typescript": "^2.4.0",
+        "@gewis/prettier-config": "^2.2.2",
         "@types/webpack": "^5.28.5",
+        "@types/node": "^24.0.0",
         "cross-env": "^7.0.3",
         "env-cmd": "^10.1.0",
         "nodemon": "^3.1.4",
+        "eslint": "^9.24.0",
+        "prettier": "^3.5.3",
         "ts-loader": "^9.5.1",
         "ts-node": "^10.9.2",
         "typescript": "^5.5.4",
