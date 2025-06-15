@@ -1,5 +1,5 @@
 import {Server, Request, ResponseToolkit} from "@hapi/hapi";
-import env from "./envvars";
+import env from "./env";
 import MailCowClient from 'ts-mailcow-api';
 import {createAliasDictionary, getAliasUser} from "./routes/aliases";
 

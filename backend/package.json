@@ -20,7 +20,7 @@
     "homepage": "https://github.com/JustSamuel/GEWAS#readme",
     "dependencies": {
         "@hapi/hapi": "^21.3.10",
-        "ts-mailcow-api": "^0.8.5"
+        "ts-mailcow-api": "^1.0.0"
     },
     "devDependencies": {
         "@types/webpack": "^5.28.5",
