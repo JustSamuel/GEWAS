@@ -1,5 +1,5 @@
 import { getLogger } from 'log4js';
-import { Mailbox } from "ts-mailcow-api";
+import { Mailbox } from 'ts-mailcow-api';
 import { mcc } from '../index';
 
 /**

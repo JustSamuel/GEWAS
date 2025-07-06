@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import {getAliasUser} from '../services/alias-service';
+import { getAliasUser } from '../services/alias-service';
 
 /**
  * Registers the email alias API endpoint on the Hapi server.
@@ -29,20 +29,16 @@ export function registerEmailAliasRoute(server: import('@hapi/hapi').Server) {
       try {
         return getAliasUser(email);
       } catch (error) {
-          const errorMsg =
-              error instanceof Error
-                  ? error.message
-                  : typeof error === 'string'
-                      ? error
-                      : JSON.stringify(error);
-          request.log(['error'], `Failed to get aliases for ${email}: ${errorMsg}`);
-          return h
-              .response({
-                  statusCode: 500,
-                  error: 'Internal Server Error',
-                  message: 'Failed to retrieve aliases.',
-              })
-              .code(500);
+        const errorMsg =
+          error instanceof Error ? error.message : typeof error === 'string' ? error : JSON.stringify(error);
+        request.log(['error'], `Failed to get aliases for ${email}: ${errorMsg}`);
+        return h
+          .response({
+            statusCode: 500,
+            error: 'Internal Server Error',
+            message: 'Failed to retrieve aliases.',
+          })
+          .code(500);
       }
     },
   });
