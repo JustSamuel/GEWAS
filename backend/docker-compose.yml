@@ -2,7 +2,7 @@ version: '3.6'
 
 services:
     base:
-        image:  cbc.docker-registry.gewis.nl/alias_site_backend:latest
+        image: cbc.docker-registry.gewis.nl/alias_site_backend:latest
         environment:
             - API_KEY=SECRET
             - BASE_URL=https://mail.gewis.nl/

@@ -16,7 +16,7 @@ function lookup (email) {
   }
 
   // Make request
-  xmlHttp.open('GET', `http://localhost:9404/api/email/${email}/aliases`, true) // true for asynchronous
+  xmlHttp.open('GET', `http://localhost:9404/api/v1/email/${email}/aliases`, true)
   xmlHttp.send(null)
 
   return false
