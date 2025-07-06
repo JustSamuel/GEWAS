@@ -25,6 +25,7 @@
     "dependencies": {
         "@hapi/hapi": "^21.3.10",
         "joi": "^17.13.3",
+        "log4js": "^6.9.1",
         "ts-mailcow-api": "^1.0.0"
     },
     "devDependencies": {

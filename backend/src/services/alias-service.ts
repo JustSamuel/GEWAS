@@ -1,6 +1,6 @@
 import { getLogger } from 'log4js';
-import { mcc } from '../index';
 import { Mailbox } from "ts-mailcow-api";
+import { mcc } from '../index';
 
 /**
  * AliasType describes whether an alias relationship is a direct alias, a forward, or not yet set.
